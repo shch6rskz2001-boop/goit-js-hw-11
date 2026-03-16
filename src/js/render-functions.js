@@ -1,24 +1,48 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+
 const lightbox = new SimpleLightbox(".gallery a", {
-    captionsData: "alt",
-    captionDelay: 250
+  captionsData: "alt",
+  captionDelay: 250,
 });
 
-export function renderGallery(images, gallery) {
+/**
+ * Очищає вміст контейнера галереї
+ */
+export function clearGallery(container) {
+  container.innerHTML = "";
+}
 
-    const markup = images
-        .map(
-            ({
-                webformatURL,
-                largeImageURL,
-                tags,
-                likes,
-                views,
-                comments,
-                downloads
-            }) => `
+/**
+ * Показує індикатор завантаження
+ */
+export function showLoader(loader) {
+  loader.classList.remove("hidden");
+}
+
+/**
+ * Приховує індикатор завантаження
+ */
+export function hideLoader(loader) {
+  loader.classList.add("hidden");
+}
+
+/**
+ * Рендерить картки зображень у галерею
+ */
+export function renderGallery(images, container) {
+  const markup = images
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads
+      }) => `
 <li class="gallery-item">
   <a class="gallery-link" href="${largeImageURL}">
     <figure class="gallery-figure">
@@ -28,7 +52,6 @@ export function renderGallery(images, gallery) {
         alt="${tags}"
         loading="lazy"
       />
-
       <figcaption class="gallery-figcaption">
         <ul class="img-content-wrapper">
           <li>Likes <span>${likes}</span></li>
@@ -41,10 +64,11 @@ export function renderGallery(images, gallery) {
   </a>
 </li>
 `
-        )
-        .join("");
+    )
+    .join("");
 
-    gallery.insertAdjacentHTML("beforeend", markup);
+  container.insertAdjacentHTML("beforeend", markup);
 
-    lightbox.refresh();
+  // Оновлюємо Lightbox після додавання нових елементів
+  lightbox.refresh();
 }
